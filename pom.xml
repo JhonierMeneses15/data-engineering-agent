@@ -1,54 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="
+            http://maven.apache.org/POM/4.0.0
+            https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.example</groupId>
     <artifactId>data-engineering-agent</artifactId>
     <version>0.1.0-SNAPSHOT</version>
-    <name>data-engineering-agent</name>
+
+    <name>Data Engineering Agent</name>
+    <description>AI-powered data engineering agent built with Scala and Apache Spark</description>
+
+    <!-- ============================================================= -->
+    <!-- Properties                                                    -->
+    <!-- ============================================================= -->
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Java -->
+        <java.version>17</java.version>
+        <maven.compiler.release>${java.version}</maven.compiler.release>
+
+        <!-- Scala -->
         <scala.version>2.12.19</scala.version>
+
+        <!-- Spark -->
         <spark.version>3.5.2</spark.version>
-        <maven.compiler.release>17</maven.compiler.release>
+
+        <!-- Testing -->
+        <scalatest.version>3.2.19</scalatest.version>
+
+        <!-- Maven plugins -->
+        <scala-maven-plugin.version>4.9.2</scala-maven-plugin.version>
+        <scalatest-maven-plugin.version>2.2.0</scalatest-maven-plugin.version>
+        <exec-maven-plugin.version>3.5.1</exec-maven-plugin.version>
+
+        <!-- Encoding -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
     </properties>
 
+    <!-- ============================================================= -->
+    <!-- Dependencies                                                  -->
+    <!-- ============================================================= -->
+
     <dependencies>
+
+        <!-- Scala -->
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
             <version>${scala.version}</version>
         </dependency>
+
+        <!-- Apache Spark -->
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql_2.12</artifactId>
             <version>${spark.version}</version>
         </dependency>
+
+        <!-- Tests -->
         <dependency>
             <groupId>org.scalatest</groupId>
             <artifactId>scalatest_2.12</artifactId>
-            <version>3.2.19</version>
+            <version>${scalatest.version}</version>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 
+    <!-- ============================================================= -->
+    <!-- Build                                                         -->
+    <!-- ============================================================= -->
+
     <build>
+
+        <sourceDirectory>src/main/scala</sourceDirectory>
+        <testSourceDirectory>src/test/scala</testSourceDirectory>
+
         <plugins>
+
+            <!-- ===================================================== -->
+            <!-- Scala compiler                                       -->
+            <!-- ===================================================== -->
+
             <plugin>
                 <groupId>net.alchim31.maven</groupId>
                 <artifactId>scala-maven-plugin</artifactId>
-                <version>4.9.2</version>
+                <version>${scala-maven-plugin.version}</version>
+
                 <executions>
+
                     <execution>
-                        <id>scala-compile-first</id>
+                        <id>scala-compile</id>
                         <phase>process-resources</phase>
                         <goals>
                             <goal>add-source</goal>
                             <goal>compile</goal>
                         </goals>
                     </execution>
+
                     <execution>
                         <id>scala-test-compile</id>
                         <phase>process-test-resources</phase>
@@ -56,30 +112,88 @@
                             <goal>testCompile</goal>
                         </goals>
                     </execution>
+
                 </executions>
+
                 <configuration>
+
                     <scalaVersion>${scala.version}</scalaVersion>
+
                     <args>
-                        <arg>-target:jvm-17</arg>
+                        <arg>-target:jvm-${java.version}</arg>
                     </args>
+
                 </configuration>
+
             </plugin>
+
+            <!-- ===================================================== -->
+            <!-- Java compiler                                        -->
+            <!-- ===================================================== -->
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.14.1</version>
+
+                <configuration>
+                    <release>${java.version}</release>
+                </configuration>
+
+            </plugin>
+
+            <!-- ===================================================== -->
+            <!-- ScalaTest                                             -->
+            <!-- ===================================================== -->
+
             <plugin>
                 <groupId>org.scalatest</groupId>
                 <artifactId>scalatest-maven-plugin</artifactId>
-                <version>2.2.0</version>
+                <version>${scalatest-maven-plugin.version}</version>
+
                 <configuration>
-                    <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
+                    <reportsDirectory>
+                        ${project.build.directory}/surefire-reports
+                    </reportsDirectory>
                 </configuration>
+
                 <executions>
+
                     <execution>
                         <id>test</id>
                         <goals>
                             <goal>test</goal>
                         </goals>
                     </execution>
+
                 </executions>
+
             </plugin>
+
+            <!-- ===================================================== -->
+            <!-- Run applications                                      -->
+            <!-- ===================================================== -->
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${exec-maven-plugin.version}</version>
+
+                <configuration>
+
+                    <mainClass>
+                        com.example.dataengineering.Main
+                    </mainClass>
+
+                    <arguments>
+                    </arguments>
+
+                </configuration>
+
+            </plugin>
+
         </plugins>
+
     </build>
+
 </project>
