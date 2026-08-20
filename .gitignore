@@ -5,4 +5,20 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
+# Build
 target/
+
+# Metals / Bloop
+.metals/
+.bloop/
+
+# Spark
+spark-warehouse/
+
+# IntelliJ
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
