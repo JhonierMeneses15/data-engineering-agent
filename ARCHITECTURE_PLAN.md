@@ -46,7 +46,7 @@
 
 Verification date: 2026-08-22
 
-## Agents (10) - Model Profile Mapping
+## Agents (11) - Model Profile Mapping
 
 | Agent | Model Profile | Permissions |
 |-------|---------------|-------------|

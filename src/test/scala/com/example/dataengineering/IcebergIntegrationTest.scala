@@ -5,6 +5,8 @@ import org.apache.spark.sql.SparkSession
 import com.example.dataengineering.config.IcebergConfig
 import pureconfig.ConfigSource
 
+import org.apache.spark.sql.types.{StructType, StructField, StringType, IntegerType, DateType}
+
 class IcebergIntegrationTest extends AnyFunSuite {
 
   test("integration: create Iceberg table and append records") {
@@ -27,11 +29,21 @@ class IcebergIntegrationTest extends AnyFunSuite {
 
       import spark.implicits._
 
-      val df = Seq(
-        ("C001", "Jhonier", 25, java.sql.Date.valueOf("2026-08-22")),
-        ("C002", "Alice", 30, java.sql.Date.valueOf("2026-08-22")),
-        ("C003", "Bob", 35, java.sql.Date.valueOf("2026-08-23"))
-      ).toDF("customer_id", "name", "age", "event_date")
+      val schema = StructType(Seq(
+        StructField("customer_id", StringType, nullable = true),
+        StructField("name", StringType, nullable = true),
+        StructField("age", IntegerType, nullable = false),
+        StructField("event_date", DateType, nullable = true)
+      ))
+
+      val df = spark.createDataFrame(
+        spark.sparkContext.parallelize(Seq(
+          org.apache.spark.sql.Row("C001", "Jhonier", 25, java.sql.Date.valueOf("2026-08-22")),
+          org.apache.spark.sql.Row("C002", "Alice", 30, java.sql.Date.valueOf("2026-08-22")),
+          org.apache.spark.sql.Row("C003", "Bob", 35, java.sql.Date.valueOf("2026-08-23"))
+        )),
+        schema
+      )
 
       // Write creates the table (first write with Overwrite mode)
       implicit val implicitSpark: SparkSession = spark
@@ -41,14 +53,18 @@ class IcebergIntegrationTest extends AnyFunSuite {
       val readDF = spark.read.format("iceberg").load(s"iceberg_local.$tableName")
       assert(readDF.count() === 3)
 
-      // Verify partitioning by event_date
-      val schemaCols = readDF.schema.map(_.name)
-      assert(schemaCols.contains("event_date"))
+      // Verify schema matches input (types, column order - Iceberg may adjust nullability)
+      val readFields = readDF.schema.map(f => (f.name, f.dataType))
+      val inputFields = df.schema.map(f => (f.name, f.dataType))
+      assert(readFields === inputFields)
 
       // Append new records
-      val newData = Seq(
-        ("C004", "David", 40, java.sql.Date.valueOf("2026-08-24"))
-      ).toDF("customer_id", "name", "age", "event_date")
+      val newData = spark.createDataFrame(
+        spark.sparkContext.parallelize(Seq(
+          org.apache.spark.sql.Row("C004", "David", 40, java.sql.Date.valueOf("2026-08-24"))
+        )),
+        schema
+      )
 
       com.example.dataengineering.iceberg.IcebergWriter().write(newData, config)
 

@@ -29,15 +29,32 @@ Use the `/develop` command for ticket-based development:
 
 This invokes the `development-agent` which orchestrates:
 1. **SPEC** - spec-agent creates `specs/<ticket-id>/spec.md`
-2. **PLAN** - planner-agent creates `specs/<ticket-id>/plan.md`
-3. **IMPLEMENT** - implementer-agent implements code + tests
-4. **REVIEW** - reviewer-agent creates `specs/<ticket-id>/review.md`
+2. **CHECKLIST** - validates spec completeness
+3. **HUMAN_APPROVAL** - human reviews and approves
+4. **PLAN** - planner-agent creates `specs/<ticket-id>/plan.md`
+5. **TEST_DESIGN** - test-design-agent creates `specs/<ticket-id>/tests.md`
+6. **TASKS** - task-agent creates `specs/<ticket-id>/tasks.md`
+7. **ANALYZE** - analyze-agent validates consistency
+8. **IMPLEMENT** - implementer-agent implements code + tests
+9. **VERIFY** - deterministic verification
+10. **CONVERGE** - convergence-agent validates intent
+11. **REVIEW** - reviewer-agent creates `specs/<ticket-id>/review.md`
+12. **DOCUMENTATION** - documentation-agent updates docs if needed
 
 Agents communicate through artifacts in `specs/<ticket-id>/`:
 - `input.md` (user-provided)
 - `spec.md` (spec-agent output)
+- `spec-checklist.md` (checklist stage output)
+- `approval.md` (human decision)
 - `plan.md` (planner-agent output)
+- `tests.md` (test-design-agent output)
+- `tasks.md` (task-agent output)
+- `analyze.md` (analyze-agent output)
+- `implementation.md` (implementer-agent output)
+- `verification.json` (deterministic verification)
+- `convergence.md` (convergence-agent output)
 - `review.md` (reviewer-agent output)
+- `documentation.md` (documentation-agent output, if needed)
 
 ## Code Conventions
 1. **Case classes** for DTOs/domain models (type-safe)

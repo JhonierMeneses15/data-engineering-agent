@@ -4,30 +4,30 @@ specs/<ticket-id>/spec-checklist.md
 
 ## Structure
 ```markdown
-# Spec Checklist: {ticket}
+# Spec Checklist Template
+
+## For Ticket: {ticket-id}
 
 ## Status: PASS | FAIL
 
 ## Checks
-- goal_clear: true|false
-  evidence: "..."
-- requirements_complete: true|false
-  evidence: "..."
-- ac_verifiable: true|false
-  evidence: "..."
-- constraints_documented: true|false
-  evidence: "..."
-- out_of_scope_clear: true|false
-  evidence: "..."
-- open_questions_resolved: true|false
-  evidence: "..."
-- testing_strategy_defined: true|false
-  evidence: "..."
-- documentation_impact_defined: true|false
-  evidence: "..."
+| Check | Pass | Evidence |
+|-------|------|----------|
+| Goal is clear and measurable | | |
+| Requirements complete (FR + NFR) | | |
+| Acceptance Criteria verifiable (Gherkin) | | |
+| Constraints documented | | |
+| Out of Scope clear | | |
+| Open Questions resolved | | |
+| Testing Strategy defined | | |
+| Documentation Impact defined | | |
 
-## Missing_Items
-- item: "..."
-  severity: ERROR|WARNING
-  routing: CLARIFY|SPEC
+## Missing Items
+| Item | Severity | Routing |
+|------|----------|---------|
+| ... | ERROR/WARNING | CLARIFY/SPEC |
+
+## Decision
+- PASS: Proceed to HUMAN_APPROVAL
+- FAIL: Return to SPEC or CLARIFY
 ```

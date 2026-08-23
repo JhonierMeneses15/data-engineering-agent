@@ -52,9 +52,6 @@ object Main {
       println(s"Iceberg table '${config.table.identifier}' written successfully with event_date partitioning")
       println(s"Warehouse path: ${config.catalog.warehouse}")
 
-      // Show the table contents using Spark SQL with the local catalog
-      spark.sql(s"SELECT * FROM ${config.table.identifier}").show(false)
-
     } finally {
       spark.stop()
     }

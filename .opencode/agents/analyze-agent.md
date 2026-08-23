@@ -13,7 +13,7 @@ permissions:
   bash: deny
   task: deny
 skills:
-  - software-planning
+  - spec-writing
   - code-review
   - scala-spark
 ---
